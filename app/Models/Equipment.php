@@ -10,6 +10,11 @@ class Equipment extends Model
  use HasFactory;
     protected $table = 'equipments';
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected $fillable = [
         'name',
         'description',

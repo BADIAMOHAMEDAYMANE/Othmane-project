@@ -1,35 +1,39 @@
 <?php
 namespace App\Services;
 
-use App\Models\Equipment;
+use App\DAO\EquipmentDAO;
 
 class EquipmentService
 {
+    protected $equipmentDAO;
+
+    public function __construct(EquipmentDAO $equipmentDAO)
+    {
+        $this->equipmentDAO = $equipmentDAO;
+    }
+
     public function getAll()
     {
-        return Equipment::all();
+        return $this->equipmentDAO->getAll();
     }
 
     public function create(array $data)
     {
-        return Equipment::create($data);
+        return $this->equipmentDAO->create($data);
     }
 
     public function getById($id)
     {
-        return Equipment::findOrFail($id);
+        return $this->equipmentDAO->findById($id);
     }
 
     public function update($id, array $data)
     {
-        $equipment = Equipment::findOrFail($id);
-        $equipment->update($data);
-
-        return $equipment;
+        return $this->equipmentDAO->update($id, $data);
     }
 
     public function delete($id)
     {
-        return Equipment::destroy($id);
+        return $this->equipmentDAO->delete($id);
     }
 }
