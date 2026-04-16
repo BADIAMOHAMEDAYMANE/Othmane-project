@@ -2,35 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Equipment;
 use Illuminate\Http\Request;
+use App\Services\EquipmentService;
 
 class EquipmentController extends Controller
 {
+    private $equipmentService;
+
+    public function __construct(EquipmentService $equipmentService)
+    {
+        $this->equipmentService = $equipmentService;
+    }
+
     // GET /api/equipments
     public function index()
     {
-        return Equipment::all();
+        return response()->json(
+            $this->equipmentService->getAll()
+        );
     }
 
     // POST /api/equipments
     public function store(Request $request)
     {
-        $equipment = Equipment::create($request->all());
+        $equipment = $this->equipmentService->create($request->all());
+
         return response()->json($equipment, 201);
     }
 
     // GET /api/equipments/{id}
     public function show($id)
     {
-        return Equipment::findOrFail($id);
+        return response()->json(
+            $this->equipmentService->getById($id)
+        );
     }
 
     // PUT /api/equipments/{id}
     public function update(Request $request, $id)
     {
-        $equipment = Equipment::findOrFail($id);
-        $equipment->update($request->all());
+        $equipment = $this->equipmentService->update($id, $request->all());
 
         return response()->json($equipment);
     }
@@ -38,7 +49,10 @@ class EquipmentController extends Controller
     // DELETE /api/equipments/{id}
     public function destroy($id)
     {
-        Equipment::destroy($id);
-        return response()->json(['message' => 'Deleted']);
+        $this->equipmentService->delete($id);
+
+        return response()->json([
+            'message' => 'Deleted successfully'
+        ]);
     }
 }
